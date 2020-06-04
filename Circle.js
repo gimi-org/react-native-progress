@@ -45,7 +45,7 @@ export class ProgressCircle extends Component {
     endAngle: PropTypes.number,
     allowFontScaling: PropTypes.bool,
     shadowColor: PropTypes.string,
-    shadowOffset: {x: PropTypes.number, y: PropTypes.number},
+    shadowOffset: PropTypes.object,
     shadowOpacity: PropTypes.number,
     shadowRadius: PropTypes.number
   };
