@@ -1,22 +1,23 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { Animated, StyleSheet, Text, View } from 'react-native';
-import { Surface as ARTSurface } from '@react-native-community/art';
+// @flow
+import React, {Component} from 'react'
+import PropTypes from 'prop-types'
+import {Animated, StyleSheet, Text, View} from 'react-native'
+import {Surface as ARTSurface} from '@react-native-community/art'
 
-import Arc from './Shapes/Arc';
-import withAnimation from './withAnimation';
+import Arc from './Shapes/Arc'
+import withAnimation from './withAnimation'
 
-const CIRCLE = Math.PI * 2;
+const CIRCLE = Math.PI * 2
 
-const AnimatedSurface = Animated.createAnimatedComponent(ARTSurface);
-const AnimatedArc = Animated.createAnimatedComponent(Arc);
+const AnimatedSurface = Animated.createAnimatedComponent(ARTSurface)
+const AnimatedArc = Animated.createAnimatedComponent(Arc)
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'transparent',
-    overflow: 'hidden',
-  },
-});
+    overflow: 'hidden'
+  }
+})
 
 export class ProgressCircle extends Component {
   static propTypes = {
@@ -31,7 +32,7 @@ export class ProgressCircle extends Component {
     indeterminate: PropTypes.bool,
     progress: PropTypes.oneOfType([
       PropTypes.number,
-      PropTypes.instanceOf(Animated.Value),
+      PropTypes.instanceOf(Animated.Value)
     ]),
     rotation: PropTypes.instanceOf(Animated.Value),
     showsText: PropTypes.bool,
@@ -43,6 +44,10 @@ export class ProgressCircle extends Component {
     unfilledColor: PropTypes.string,
     endAngle: PropTypes.number,
     allowFontScaling: PropTypes.bool,
+    shadowColor: PropTypes.string,
+    shadowOffset: {x: PropTypes.number, y: PropTypes.number},
+    shadowOpacity: PropTypes.number,
+    shadowRadius: PropTypes.number
   };
 
   static defaultProps = {
@@ -55,27 +60,25 @@ export class ProgressCircle extends Component {
     size: 40,
     thickness: 3,
     endAngle: 0.9,
-    allowFontScaling: true,
+    allowFontScaling: true
   };
 
-  constructor(props, context) {
-    super(props, context);
+  constructor (props, context) {
+    super(props, context)
 
-    this.progressValue = 0;
+    this.progressValue = 0
   }
 
-  componentDidMount() {
-    if (this.props.animated) {
+  componentDidMount () {
+    if (this.props.animated)
       this.props.progress.addListener(event => {
-        this.progressValue = event.value;
-        if (this.props.showsText || this.progressValue === 1) {
-          this.forceUpdate();
-        }
-      });
-    }
+        this.progressValue = event.value
+        if (this.props.showsText || this.progressValue === 1)
+          this.forceUpdate()
+      })
   }
 
-  render() {
+  render () {
     const {
       animated,
       borderColor,
@@ -97,25 +100,29 @@ export class ProgressCircle extends Component {
       unfilledColor,
       endAngle,
       allowFontScaling,
+      shadowColor,
+      shadowOffset,
+      shadowOpacity,
+      shadowRadius,
       ...restProps
-    } = this.props;
+    } = this.props
 
-    const border = borderWidth || (indeterminate ? 1 : 0);
+    const border = borderWidth || (indeterminate ? 1 : 0)
 
-    const radius = size / 2 - border;
+    const radius = size / 2 - border
     const offset = {
       top: border,
-      left: border,
-    };
-    const textOffset = border + thickness;
-    const textSize = size - textOffset * 2;
+      left: border
+    }
+    const textOffset = border + thickness
+    const textSize = size - textOffset * 2
 
-    const Surface = rotation ? AnimatedSurface : ARTSurface;
-    const Shape = animated ? AnimatedArc : Arc;
-    const progressValue = animated ? this.progressValue : progress;
+    const Surface = rotation ? AnimatedSurface : ARTSurface
+    const Shape = animated ? AnimatedArc : Arc
+    const progressValue = animated ? this.progressValue : progress
     const angle = animated
       ? Animated.multiply(progress, CIRCLE)
-      : progress * CIRCLE;
+      : progress * CIRCLE
 
     return (
       <View style={[styles.container, style]} {...restProps}>
@@ -128,12 +135,12 @@ export class ProgressCircle extends Component {
                 rotate:
                   indeterminate && rotation
                     ? rotation.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: ['0deg', '360deg'],
-                      })
-                    : '0deg',
-              },
-            ],
+                      inputRange: [0, 1],
+                      outputRange: ['0deg', '360deg']
+                    })
+                    : '0deg'
+              }
+            ]
           }}
         >
           {unfilledColor && progressValue !== 1 ? (
@@ -146,6 +153,10 @@ export class ProgressCircle extends Component {
               direction={direction}
               stroke={unfilledColor}
               strokeWidth={thickness}
+              shadowColor={shadowColor || 'transparent'}
+              shadowOffset={shadowOffset || undefined}
+              shadowOpacity={shadowOpacity || 0}
+              shadowRadius={shadowRadius || 0}
             />
           ) : (
             false
@@ -161,6 +172,10 @@ export class ProgressCircle extends Component {
               stroke={color}
               strokeCap={strokeCap}
               strokeWidth={thickness}
+              shadowColor={shadowColor || 'transparent'}
+              shadowOffset={shadowOffset || undefined}
+              shadowOpacity={shadowOpacity || 0}
+              shadowRadius={shadowRadius || 0}
             />
           ) : (
             false
@@ -188,7 +203,7 @@ export class ProgressCircle extends Component {
               height: textSize,
               borderRadius: textSize / 2,
               alignItems: 'center',
-              justifyContent: 'center',
+              justifyContent: 'center'
             }}
           >
             <Text
@@ -196,9 +211,9 @@ export class ProgressCircle extends Component {
                 {
                   color,
                   fontSize: textSize / 4.5,
-                  fontWeight: '300',
+                  fontWeight: '300'
                 },
-                textStyle,
+                textStyle
               ]}
               allowFontScaling={allowFontScaling}
             >
@@ -210,8 +225,8 @@ export class ProgressCircle extends Component {
         )}
         {children}
       </View>
-    );
+    )
   }
 }
 
-export default withAnimation(ProgressCircle);
+export default withAnimation(ProgressCircle)
